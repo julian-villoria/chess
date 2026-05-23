@@ -1,5 +1,6 @@
 import Board from "./Board";
-import { Color } from "./enums/Color";
+import { Colors } from "./enums/Colors";
+import Queen from "./Pieces/Queen";
 import Player from "./Player";
 
 export default class Game {
@@ -9,8 +10,12 @@ export default class Game {
   constructor() {
     this.board = new Board();
     this.players = [
-      new Player("player1", Color.WHITE),
-      new Player("player2", Color.BLACK),
+      new Player("player1", Colors.WHITE),
+      new Player("player2", Colors.BLACK),
     ];
+    const píece = new Queen(Colors.WHITE);
+    const cell = this.board.getCell("E", 4)!;
+
+    console.log(píece.availableMoves(cell));
   }
 }

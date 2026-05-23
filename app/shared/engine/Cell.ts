@@ -1,5 +1,6 @@
 import Piece from "./Piece";
-import type { Column, Row } from "./utils/types";
+import type { Column } from "./enums/Columns";
+import type { Row } from "./enums/Rows";
 
 export default class Cell {
   constructor(

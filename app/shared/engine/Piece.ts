@@ -1,9 +1,12 @@
-import type { Color } from "./enums/Color";
+import type Cell from "./Cell";
+import type { Colors } from "./enums/Colors";
 import type { Pieces } from "./enums/Pieces";
 
-export default class Piece {
+export default abstract class Piece {
   constructor(
     public name: Pieces,
-    public color: Color,
+    public color: Colors,
   ) {}
+
+  abstract availableMoves(cell: Cell): Cell[];
 }

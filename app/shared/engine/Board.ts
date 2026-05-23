@@ -1,9 +1,16 @@
 import Cell from "./Cell";
 import Piece from "./Piece";
-import { Color } from "./enums/Color";
-import { Pieces } from "./enums/Pieces";
-import { columns, rows } from "./utils/consts";
-import type { Column, Row } from "./utils/types";
+import Pawn from "./Pieces/Pawn";
+import { Colors } from "./enums/Colors";
+import type { Row } from "./enums/Rows";
+import { ROWS } from "./enums/Rows";
+import type { Column } from "./enums/Columns";
+import { COLUMNS } from "./enums/Columns";
+import King from "./Pieces/King";
+import Rook from "./Pieces/Rook";
+import Knight from "./Pieces/Knight";
+import Bishop from "./Pieces/Bishop";
+import Queen from "./Pieces/Queen";
 
 export default class Board {
   cells: Cell[] = [];
@@ -13,8 +20,8 @@ export default class Board {
   }
 
   private createBoard(): void {
-    for (const column of columns) {
-      for (const row of rows) {
+    for (const column of COLUMNS) {
+      for (const row of ROWS) {
         const initialPiece = this.getInitialPiece(column as Column, row as Row);
 
         this.cells.push(new Cell(column as Column, row as Row, initialPiece));
@@ -23,22 +30,27 @@ export default class Board {
   }
 
   private getInitialPiece(column: Column, row: Row): Piece | null {
-    if (row === 2) return new Piece(Pieces.PAWN, Color.WHITE);
-    if (row === 7) return new Piece(Pieces.PAWN, Color.BLACK);
-
     if (row === 1 || row === 8) {
-      const color = row === 1 ? Color.WHITE : Color.BLACK;
-      const pieceMap: Record<Column, Pieces> = {
-        a: Pieces.ROCK,
-        b: Pieces.KNIGHT,
-        c: Pieces.BISHOP,
-        d: Pieces.QUEEN,
-        e: Pieces.KING,
-        f: Pieces.BISHOP,
-        g: Pieces.KNIGHT,
-        h: Pieces.ROCK,
+      const color = row === 1 ? Colors.WHITE : Colors.BLACK;
+
+      const pieceMap: Record<Column, new (color: Colors) => Piece> = {
+        A: Rook,
+        B: Knight,
+        C: Bishop,
+        D: Queen,
+        E: King,
+        F: Bishop,
+        G: Knight,
+        H: Rook,
       };
-      return new Piece(pieceMap[column], color);
+
+      const PieceClass = pieceMap[column];
+      return PieceClass ? new PieceClass(color) : null;
+    }
+
+    if (row === 2 || row === 7) {
+      const color = row === 2 ? Colors.WHITE : Colors.BLACK;
+      return new Pawn(color);
     }
 
     return null;
@@ -48,5 +60,21 @@ export default class Board {
     return this.cells.find(
       (cell) => cell.column === column && cell.row === row,
     );
+  }
+
+  public isSameColor(from: Cell, to: Cell): boolean {
+    if (from.piece && to.piece) {
+      return from.piece.color === to.piece.color;
+    } else {
+      return false;
+    }
+  }
+
+  public canMove(from: Cell, to: Cell): boolean {
+    if (this.isSameColor(from, to)) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

@@ -1,5 +1,5 @@
 export enum Pieces {
-  ROCK = "Rock",
+  ROOK = "Rook",
   KNIGHT = "Knight",
   BISHOP = "Bishop",
   QUEEN = "Queen",
