@@ -62,19 +62,11 @@ export default class Board {
     );
   }
 
-  public isSameColor(from: Cell, to: Cell): boolean {
-    if (from.piece && to.piece) {
-      return from.piece.color === to.piece.color;
-    } else {
-      return false;
-    }
-  }
-
   public canMove(from: Cell, to: Cell): boolean {
-    if (this.isSameColor(from, to)) {
-      return false;
-    } else {
-      return true;
-    }
+    return Boolean(
+      from.piece
+        ?.availableMoves(from, this)
+        .find((fromCell) => fromCell === to),
+    );
   }
 }

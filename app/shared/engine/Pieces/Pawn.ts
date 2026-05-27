@@ -1,18 +1,13 @@
-import Cell from "../Cell";
 import type { Colors } from "../enums/Colors";
 import { Pieces } from "../enums/Pieces";
 import Piece from "../Piece";
-import type { Row } from "../enums/Rows";
+import type { Direction } from "../types/Direction";
 
 export default class Pawn extends Piece {
+  readonly directions: Direction[] = [{ col: 0, row: 1 }];
+  readonly maxMovements: number = 2;
+
   constructor(color: Colors) {
     super(Pieces.PAWN, color);
-  }
-
-  availableMoves(cell: Cell): Cell[] {
-    return [
-      new Cell(cell.column, ++cell.row as Row),
-      new Cell(cell.column, ++cell.row as Row),
-    ];
   }
 }
