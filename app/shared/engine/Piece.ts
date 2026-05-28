@@ -15,7 +15,7 @@ export default abstract class Piece {
     public color: Colors,
   ) {}
 
-  private isSameColor(piece: Piece): boolean {
+  public isSameColor(piece: Piece): boolean {
     return piece.color === this.color;
   }
 

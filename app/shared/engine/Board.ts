@@ -69,4 +69,21 @@ export default class Board {
         .find((fromCell) => fromCell === to),
     );
   }
+
+  public move(from: Cell, to: Cell): void {
+    if (!this.canMove(from, to)) return;
+
+    const cellFrom = this.getCell(from.column, from.row);
+    const cellTo = this.getCell(to.column, to.row);
+
+    if (cellTo && cellFrom && cellFrom.piece) {
+      if (
+        !cellTo.piece ||
+        (cellTo.piece && !cellFrom.piece.isSameColor(cellTo.piece))
+      )
+        cellTo.piece = cellFrom.piece;
+
+      cellFrom.piece = null;
+    }
+  }
 }
