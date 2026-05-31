@@ -1,33 +1,47 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { COLUMNS } from "~/shared/engine/enums/Columns";
 
-const boardSize = 512; // Total width and height of the canvas in pixels
-const chessCanvas = ref(null);
+const { game, board, turn, availableMoves } = useChess();
+const {
+  canvasRef,
+  boardSize,
+  squareSize,
+  createBoard,
+  preloadImages,
+  highlightSquare,
+} = useCanvas(board.value);
 
-onMounted(() => {
-  const canvas = chessCanvas.value;
-  const ctx = canvas.getContext("2d");
+onMounted(async () => {
+  await preloadImages();
 
-  const columns = 8;
-  const rows = 8;
-  const squareSize = boardSize / columns;
+  createBoard();
+});
 
-  const lightColor = "#f0d9b5";
-  const darkColor = "#b58863";
+useEventListener(canvasRef, "click", (event) => {
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
 
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < columns; c++) {
-      ctx.fillStyle = (r + c) % 2 === 0 ? lightColor : darkColor;
-      ctx.fillRect(c * squareSize, r * squareSize, squareSize, squareSize);
-    }
-  }
+  const mouseX = event.clientX - rect.left;
+  const mouseY = event.clientY - rect.top;
+
+  const col = Math.floor(mouseX / squareSize);
+  const row = Math.floor(mouseY / squareSize);
+  const mappedCol = COLUMNS[col];
+  const boardRow = 8 - row;
+
+  highlightSquare(col, row, "blue");
+
+  const availableMovesCells = availableMoves(mappedCol, boardRow);
+  availableMovesCells.forEach((move) => {
+    highlightSquare(COLUMNS.indexOf(move.column), 8 - move.row, "yellow");
+  });
 });
 </script>
 
 <template>
   <div class="chess-container">
     <canvas
-      ref="chessCanvas"
+      ref="canvasRef"
       :width="boardSize"
       :height="boardSize"
       class="chess-board"

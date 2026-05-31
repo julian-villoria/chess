@@ -5,6 +5,7 @@ import Player from "./Player";
 export default class Game {
   board: Board;
   players: Player[];
+  turn: Colors;
 
   constructor() {
     this.board = new Board();
@@ -12,5 +13,14 @@ export default class Game {
       new Player("player1", Colors.WHITE),
       new Player("player2", Colors.BLACK),
     ];
+    this.turn = Colors.WHITE;
+  }
+
+  public getBoard(): Board {
+    return this.board;
+  }
+
+  public getTurn(): Colors {
+    return this.turn;
   }
 }
