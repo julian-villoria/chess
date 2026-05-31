@@ -6,36 +6,38 @@ const {
   canvasRef,
   boardSize,
   squareSize,
-  createBoard,
+  drawBoard,
   preloadImages,
-  highlightSquare,
+  highlightSelected,
+  highlightAvailableMoves,
 } = useCanvas(board.value);
 
 onMounted(async () => {
   await preloadImages();
 
-  createBoard();
+  drawBoard();
 });
 
 useEventListener(canvasRef, "click", (event) => {
+  drawBoard();
   const canvas = canvasRef.value;
   const rect = canvas.getBoundingClientRect();
 
   const mouseX = event.clientX - rect.left;
   const mouseY = event.clientY - rect.top;
 
-  const col = Math.floor(mouseX / squareSize);
-  const row = Math.floor(mouseY / squareSize);
-  const mappedCol = COLUMNS[col];
-  const boardRow = 8 - row;
+  const canvaCol = Math.floor(mouseX / squareSize);
+  const canvaRow = Math.floor(mouseY / squareSize);
+  highlightSelected(canvaCol, canvaRow);
 
-  highlightSquare(col, row, "blue");
+  const logicCol = COLUMNS[canvaCol];
+  const logicRow = 8 - canvaRow;
 
-  const availableMovesCells = availableMoves(mappedCol, boardRow);
-  availableMovesCells.forEach((move) => {
-    highlightSquare(COLUMNS.indexOf(move.column), 8 - move.row, "yellow");
-  });
+  const availableMovesCells = availableMoves(logicCol, logicRow);
+  highlightAvailableMoves(availableMovesCells);
 });
+
+// TODO add canvas drag and drop
 </script>
 
 <template>
