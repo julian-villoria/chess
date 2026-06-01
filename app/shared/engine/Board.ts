@@ -71,10 +71,11 @@ export default class Board {
   }
 
   public move(from: Cell, to: Cell): void {
-    if (!this.canMove(from, to)) return;
-
     const cellFrom = this.getCell(from.column, from.row);
     const cellTo = this.getCell(to.column, to.row);
+
+    if (!cellFrom || !cellTo) return;
+    if (!this.canMove(cellFrom, cellTo)) return;
 
     if (cellTo && cellFrom && cellFrom.piece) {
       if (

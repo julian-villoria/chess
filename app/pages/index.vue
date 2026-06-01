@@ -1,7 +1,9 @@
 <script setup>
+import Cell from "~/shared/engine/Cell";
 import { COLUMNS } from "~/shared/engine/enums/Columns";
 
-const { game, board, turn, availableMoves } = useChess();
+const { game, board, turn, selectedCell, availableMoves, move, getCell } =
+  useChess();
 const {
   canvasRef,
   boardSize,
@@ -28,6 +30,7 @@ useEventListener(canvasRef, "click", (event) => {
 
   const canvaCol = Math.floor(mouseX / squareSize);
   const canvaRow = Math.floor(mouseY / squareSize);
+
   highlightSelected(canvaCol, canvaRow);
 
   const logicCol = COLUMNS[canvaCol];
@@ -35,9 +38,17 @@ useEventListener(canvasRef, "click", (event) => {
 
   const availableMovesCells = availableMoves(logicCol, logicRow);
   highlightAvailableMoves(availableMovesCells);
+
+  selectedCell.value = getCell(logicCol, logicRow);
 });
 
-// TODO add canvas drag and drop
+watch(selectedCell, (to, from) => {
+  if (from && to) {
+    move(from, to);
+    drawBoard();
+    selectedCell.value = null;
+  }
+});
 </script>
 
 <template>

@@ -1,4 +1,5 @@
 import Board from "./Board";
+import type Cell from "./Cell";
 import { Colors } from "./enums/Colors";
 import Player from "./Player";
 
