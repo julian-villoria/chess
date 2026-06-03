@@ -7,8 +7,6 @@ export function useChess() {
   const game = new Game();
 
   const selectedCell = ref<Cell | null>(null);
-  const board = shallowRef(game.getBoard());
-  const turn = ref(game.getTurn());
 
   function availableMoves(column: Column, row: Row): Cell[] {
     const cell = game.board.getCell(column, row);
@@ -18,8 +16,13 @@ export function useChess() {
     return cell.piece.availableMoves(cell, game.getBoard());
   }
 
+  function canMove(from: Cell, to: Cell): boolean {
+    return game.board.canMove(from, to);
+  }
+
   function move(from: Cell, to: Cell): void {
     game.board.move(from, to);
+    game.nextTurn();
   }
 
   function getCell(column: Column, row: number): Cell | null {
@@ -28,9 +31,8 @@ export function useChess() {
 
   return {
     game,
-    board,
-    turn,
     selectedCell,
+    canMove,
     availableMoves,
     move,
     getCell,

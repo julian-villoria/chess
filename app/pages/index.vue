@@ -1,8 +1,7 @@
 <script setup>
-import Cell from "~/shared/engine/Cell";
 import { COLUMNS } from "~/shared/engine/enums/Columns";
 
-const { game, board, turn, selectedCell, availableMoves, move, getCell } =
+const { game, selectedCell, availableMoves, canMove, move, getCell } =
   useChess();
 const {
   canvasRef,
@@ -12,7 +11,7 @@ const {
   preloadImages,
   highlightSelected,
   highlightAvailableMoves,
-} = useCanvas(board.value);
+} = useCanvas(game.getBoard());
 
 onMounted(async () => {
   await preloadImages();
@@ -21,7 +20,6 @@ onMounted(async () => {
 });
 
 useEventListener(canvasRef, "click", (event) => {
-  drawBoard();
   const canvas = canvasRef.value;
   const rect = canvas.getBoundingClientRect();
 
@@ -31,23 +29,33 @@ useEventListener(canvasRef, "click", (event) => {
   const canvaCol = Math.floor(mouseX / squareSize);
   const canvaRow = Math.floor(mouseY / squareSize);
 
-  highlightSelected(canvaCol, canvaRow);
-
   const logicCol = COLUMNS[canvaCol];
   const logicRow = 8 - canvaRow;
+
+  const clickedCell = getCell(logicCol, logicRow);
+
+  if (
+    selectedCell.value &&
+    selectedCell.value.piece &&
+    game.turn === selectedCell.value.piece.color
+  ) {
+    console.log(game.turn, selectedCell.value.piece.color);
+    if (canMove(selectedCell.value, clickedCell)) {
+      move(selectedCell.value, clickedCell);
+      drawBoard();
+      selectedCell.value = null;
+      return;
+    }
+  }
+
+  drawBoard();
+
+  highlightSelected(canvaCol, canvaRow);
 
   const availableMovesCells = availableMoves(logicCol, logicRow);
   highlightAvailableMoves(availableMovesCells);
 
-  selectedCell.value = getCell(logicCol, logicRow);
-});
-
-watch(selectedCell, (to, from) => {
-  if (from && to) {
-    move(from, to);
-    drawBoard();
-    selectedCell.value = null;
-  }
+  selectedCell.value = clickedCell;
 });
 </script>
 

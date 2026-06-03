@@ -1,5 +1,4 @@
 import Board from "./Board";
-import type Cell from "./Cell";
 import { Colors } from "./enums/Colors";
 import Player from "./Player";
 
@@ -23,5 +22,9 @@ export default class Game {
 
   public getTurn(): Colors {
     return this.turn;
+  }
+
+  public nextTurn(): void {
+    this.turn = this.turn === Colors.WHITE ? Colors.BLACK : Colors.WHITE;
   }
 }

@@ -78,6 +78,9 @@ export default class Board {
     if (!this.canMove(cellFrom, cellTo)) return;
 
     if (cellTo && cellFrom && cellFrom.piece) {
+      if (cellFrom.piece instanceof Pawn) {
+        cellFrom.piece.maxMovements = 1;
+      }
       if (
         !cellTo.piece ||
         (cellTo.piece && !cellFrom.piece.isSameColor(cellTo.piece))
