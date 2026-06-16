@@ -4,10 +4,10 @@ import type { Colors } from "./enums/Colors";
 import { getShiftedColumn } from "./enums/Columns";
 import type { Pieces } from "./enums/Pieces";
 import { getShiftedRow } from "./enums/Rows";
-import type { Direction } from "./types/Direction";
+import type { Coords } from "./types/Coords";
 
 export default abstract class Piece {
-  abstract readonly directions: Direction[];
+  abstract readonly directions: Coords[];
   abstract readonly maxMovements: number;
 
   constructor(

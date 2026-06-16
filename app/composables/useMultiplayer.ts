@@ -1,8 +1,8 @@
-import { Colors } from "~/shared/engine/enums/Colors";
+import type { Colors } from "~/shared/engine/enums/Colors";
 
 export function useMultiplayer() {
   const { status, data, send, close } = useWebSocket(
-    `ws://localhost:3000/match`,
+    `ws://localhost:3000/socket`,
     {
       immediate: true,
     },
@@ -20,7 +20,6 @@ export function useMultiplayer() {
       if (message.type === "color_assignment") {
         myColor.value = message.color;
       } else if (message.type === "opponent_move") {
-        console.log(message.data);
         lastOpponentMove.value = message.data;
       }
     } catch (e) {
@@ -29,13 +28,13 @@ export function useMultiplayer() {
   });
 
   const sendMove = (
-    fromCol: string | number,
+    fromCol: string,
     fromRow: number,
-    toCol: string | number,
+    toCol: string,
     toRow: number,
   ) => {
     const payload = {
-      color: toRaw(myColor.value),
+      color: myColor.value,
       from: { col: fromCol, row: fromRow },
       to: { col: toCol, row: toRow },
     };

@@ -3,13 +3,13 @@ import type { Column } from "~/shared/engine/enums/Columns";
 import type { Row } from "~/shared/engine/enums/Rows";
 import Game from "~/shared/engine/Game";
 
-export function useChess() {
-  const game = new Game();
-
+export function useChess(game: Game) {
   const selectedCell = ref<Cell | null>(null);
 
   function availableMoves(column: Column, row: Row): Cell[] {
-    const cell = game.board.getCell(column, row);
+    if (!game || !game.getBoard()) return [];
+
+    const cell = game.getBoard().getCell(column, row);
 
     if (!cell || !cell.piece) return [];
 
@@ -17,16 +17,20 @@ export function useChess() {
   }
 
   function canMove(from: Cell, to: Cell): boolean {
-    return game.board.canMove(from, to);
+    if (!game) return false;
+
+    return game.getBoard().canMove(from, to);
   }
 
   function move(from: Cell, to: Cell): void {
-    game.board.move(from, to);
+    if (!game) return;
+
+    game.getBoard().move(from, to);
     game.nextTurn();
   }
 
   function getCell(column: Column, row: number): Cell | null {
-    return game.board.getCell(column, row) || null;
+    return game?.getBoard().getCell(column, row) || null;
   }
 
   return {

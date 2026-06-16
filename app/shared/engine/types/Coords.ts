@@ -1,4 +1,4 @@
-export type Direction = {
+export type Coords = {
   col: number;
   row: number;
 };

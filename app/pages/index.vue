@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { COLUMNS } from "~/shared/engine/enums/Columns";
 import type { Row } from "~/shared/engine/enums/Rows";
+import Game from "~/shared/engine/Game";
 
-const { game, selectedCell, availableMoves, canMove, move, getCell } =
-  useChess();
+const { data } = await useFetch<Game>("/game");
+const game = computed(() =>
+  data.value ? new Game(data.value.board, data.value.turn) : null,
+);
+
+const { selectedCell, availableMoves, canMove, move, getCell } = useChess(
+  game.value as Game,
+);
+
 const {
   canvasRef,
   boardSize,
@@ -12,7 +20,8 @@ const {
   preloadImages,
   highlightSelected,
   highlightAvailableMoves,
-} = useCanvas(game.getBoard());
+} = useCanvas(game.value as Game);
+
 const { sendMove, lastOpponentMove, myColor } = useMultiplayer();
 
 onMounted(async () => {
@@ -58,7 +67,7 @@ useEventListener(canvasRef, "click", (event) => {
   if (
     selectedCell.value &&
     selectedCell.value.piece &&
-    game.turn === selectedCell.value.piece.color
+    game.value?.turn === selectedCell.value.piece.color
   ) {
     if (myColor.value !== selectedCell.value.piece.color) {
       return;

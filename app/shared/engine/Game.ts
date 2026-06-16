@@ -1,19 +1,13 @@
 import Board from "./Board";
 import { Colors } from "./enums/Colors";
-import Player from "./Player";
 
 export default class Game {
   board: Board;
-  players: Player[];
   turn: Colors;
 
-  constructor() {
-    this.board = new Board();
-    this.players = [
-      new Player("player1", Colors.WHITE),
-      new Player("player2", Colors.BLACK),
-    ];
-    this.turn = Colors.WHITE;
+  constructor(board: Board, turn: Colors) {
+    this.board = board || new Board();
+    this.turn = turn || Colors.WHITE;
   }
 
   public getBoard(): Board {

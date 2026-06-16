@@ -1,7 +1,7 @@
-import type Board from "~/shared/engine/Board";
 import type Cell from "~/shared/engine/Cell";
 import { COLUMNS } from "~/shared/engine/enums/Columns";
 import { ROWS } from "~/shared/engine/enums/Rows";
+import type Game from "~/shared/engine/Game";
 
 const PIECE_ASSETS: Record<string, string> = {
   White_Pawn: "/chessPieces/white_pawn.svg",
@@ -19,7 +19,8 @@ const PIECE_ASSETS: Record<string, string> = {
   Black_King: "/chessPieces/black_king.svg",
 };
 
-export function useCanvas(board: Board) {
+export function useCanvas(game: Game) {
+  console.log(game);
   const canvasRef = ref<HTMLCanvasElement | null>(null);
   const boardSize = 1024;
   const columns = COLUMNS.length;
@@ -59,7 +60,7 @@ export function useCanvas(board: Board) {
 
   function drawBoard(): void {
     const ctx = getContext();
-    if (!ctx) return;
+    if (!ctx || !game || !game.board) return;
 
     for (let row = 0; row < rows; row++) {
       for (let column = 0; column < columns; column++) {
@@ -77,7 +78,7 @@ export function useCanvas(board: Board) {
 
         const logicalRow = 8 - row;
 
-        const cell = board.getCell(mappedColumn, logicalRow);
+        const cell = game.board.getCell(mappedColumn, logicalRow);
         if (!cell?.piece) continue;
 
         const asset = `${cell.piece.color}_${cell.piece.constructor.name}`;

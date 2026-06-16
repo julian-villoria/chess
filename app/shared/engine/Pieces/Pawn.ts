@@ -5,10 +5,10 @@ import { getShiftedColumn } from "../enums/Columns";
 import { Pieces } from "../enums/Pieces";
 import { getShiftedRow } from "../enums/Rows";
 import Piece from "../Piece";
-import type { Direction } from "../types/Direction";
+import type { Coords } from "../types/Coords";
 
 export default class Pawn extends Piece {
-  readonly directions: Direction[] = [];
+  readonly directions: Coords[] = [];
   public maxMovements: number = 2;
 
   constructor(color: Colors) {
