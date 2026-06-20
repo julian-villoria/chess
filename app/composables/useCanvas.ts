@@ -19,8 +19,7 @@ const PIECE_ASSETS: Record<string, string> = {
   Black_King: "/chessPieces/black_king.svg",
 };
 
-export function useCanvas(game: Game) {
-  console.log(game);
+export function useCanvas(game: Ref<Game | undefined>) {
   const canvasRef = ref<HTMLCanvasElement | null>(null);
   const boardSize = 1024;
   const columns = COLUMNS.length;
@@ -60,7 +59,7 @@ export function useCanvas(game: Game) {
 
   function drawBoard(): void {
     const ctx = getContext();
-    if (!ctx || !game || !game.board) return;
+    if (!ctx || !game || !game.value?.board) return;
 
     for (let row = 0; row < rows; row++) {
       for (let column = 0; column < columns; column++) {
@@ -78,13 +77,13 @@ export function useCanvas(game: Game) {
 
         const logicalRow = 8 - row;
 
-        const cell = game.board.getCell(mappedColumn, logicalRow);
+        const cell = game.value.board.getCell(mappedColumn, logicalRow);
         if (!cell?.piece) continue;
 
-        const asset = `${cell.piece.color}_${cell.piece.constructor.name}`;
+        const asset = `${cell.piece.color}_${cell.piece.name}`;
 
         const img = imagesCache.get(asset);
-        if (!img) return;
+        if (!img) continue;
 
         ctx.drawImage(
           img,

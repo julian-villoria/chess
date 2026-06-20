@@ -5,7 +5,7 @@ export default class Game {
   board: Board;
   turn: Colors;
 
-  constructor(board: Board, turn: Colors) {
+  constructor(board?: Board, turn?: Colors) {
     this.board = board || new Board();
     this.turn = turn || Colors.WHITE;
   }

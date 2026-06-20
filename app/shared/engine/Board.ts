@@ -15,17 +15,11 @@ import Queen from "./Pieces/Queen";
 export default class Board {
   cells: Cell[] = [];
 
-  constructor() {
-    this.createBoard();
-  }
-
-  private createBoard(): void {
-    for (const column of COLUMNS) {
-      for (const row of ROWS) {
-        const initialPiece = this.getInitialPiece(column as Column, row as Row);
-
-        this.cells.push(new Cell(column as Column, row as Row, initialPiece));
-      }
+  constructor(cells?: Cell[]) {
+    if (cells) {
+      this.cells = cells;
+    } else {
+      this.createBoard();
     }
   }
 
@@ -54,6 +48,20 @@ export default class Board {
     }
 
     return null;
+  }
+
+  public createBoard(): void {
+    for (const column of COLUMNS) {
+      for (const row of ROWS) {
+        const initialPiece = this.getInitialPiece(column as Column, row as Row);
+
+        this.cells.push(new Cell(column as Column, row as Row, initialPiece));
+      }
+    }
+  }
+
+  public getCells(): Cell[] {
+    return this.cells;
   }
 
   public getCell(column: Column, row: number): Cell | undefined {

@@ -1,16 +1,38 @@
 <script setup lang="ts">
+import Board from "~/shared/engine/Board";
 import { COLUMNS } from "~/shared/engine/enums/Columns";
 import type { Row } from "~/shared/engine/enums/Rows";
 import Game from "~/shared/engine/Game";
+import { createPieceFromJSON } from "~/shared/engine/utils/PieceFactory";
 
-const { data } = await useFetch<Game>("/game");
-const game = computed(() =>
-  data.value ? new Game(data.value.board, data.value.turn) : null,
-);
+const { data } = await useFetch("/game");
 
-const { selectedCell, availableMoves, canMove, move, getCell } = useChess(
-  game.value as Game,
-);
+const game = computed(() => {
+  if (!data.value) return;
+
+  const objectData = JSON.parse(data.value);
+
+  const restoredBoard = new Board();
+
+  objectData.board.cells.forEach((rawCell: any) => {
+    if (rawCell && rawCell.piece) {
+      const realPiece = createPieceFromJSON(
+        rawCell.piece.name,
+        rawCell.piece.color,
+      );
+
+      if (realPiece) {
+        const cell = restoredBoard.getCell(rawCell.column, rawCell.row);
+
+        if (cell) cell.piece = realPiece;
+      }
+    }
+  });
+
+  return new Game(restoredBoard, objectData.turn);
+});
+
+const { selectedCell, availableMoves, canMove, move, getCell } = useChess(game);
 
 const {
   canvasRef,
@@ -20,7 +42,7 @@ const {
   preloadImages,
   highlightSelected,
   highlightAvailableMoves,
-} = useCanvas(game.value as Game);
+} = useCanvas(game);
 
 const { sendMove, lastOpponentMove, myColor } = useMultiplayer();
 
@@ -67,7 +89,7 @@ useEventListener(canvasRef, "click", (event) => {
   if (
     selectedCell.value &&
     selectedCell.value.piece &&
-    game.value?.turn === selectedCell.value.piece.color
+    game.value?.getTurn() === selectedCell.value.piece.color
   ) {
     if (myColor.value !== selectedCell.value.piece.color) {
       return;

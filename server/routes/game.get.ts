@@ -1,3 +1,3 @@
 export default defineEventHandler(() => {
-  return serverGame.game;
+  return JSON.stringify(serverGame.game);
 });

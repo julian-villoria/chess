@@ -1,7 +1,8 @@
 import Game from "~/shared/engine/Game";
 import { ConnectedPlayer } from "./types/ConnectedPlayer";
+import Board from "~/shared/engine/Board";
 
-const game = new Game();
+const game = new Game(new Board());
 const connectedPlayers: ConnectedPlayer[] = [];
 
 export default {
