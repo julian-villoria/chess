@@ -10,7 +10,11 @@ export default defineWebSocketHandler({
     peer.subscribe(room);
 
     let newPlayer: ConnectedPlayer | null = null;
-    if (serverGame.connectedPlayers.length === 0) {
+    if (
+      serverGame.connectedPlayers.length === 0 ||
+      (serverGame.connectedPlayers.length === 1 &&
+        serverGame.connectedPlayers[0]?.color === Colors.BLACK)
+    ) {
       newPlayer = {
         peerId: peer.id,
         role: Roles.player,
@@ -43,6 +47,8 @@ export default defineWebSocketHandler({
   message(peer, message) {
     const moveData = JSON.parse(message.text());
 
+    serverGame.game.nextTurn();
+    serverGame.game.board.move(moveData.from, moveData.to);
     peer.publish(
       room,
       JSON.stringify({
@@ -53,16 +59,6 @@ export default defineWebSocketHandler({
   },
 
   close(peer) {
-    const connectedPlayer = serverGame.connectedPlayers.find(
-      (conPlayer) => conPlayer.peerId === peer.id,
-    );
-
-    if (!connectedPlayer) return;
-
-    if (connectedPlayer.peerId === peer.id) {
-      console.log(
-        `se ha desconectado el jugador: ${JSON.stringify(connectedPlayer, null, 2)}`,
-      );
-    }
+    serverGame.removeConnectedPlayer(peer.id);
   },
 });

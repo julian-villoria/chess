@@ -29,6 +29,8 @@ const game = computed(() => {
     }
   });
 
+  console.log(restoredBoard);
+
   return new Game(restoredBoard, objectData.turn);
 });
 
@@ -59,8 +61,8 @@ watch(lastOpponentMove, (moveData: any) => {
     return;
   }
 
-  const fromCell = getCell(moveData.from.col, moveData.from.row);
-  const toCell = getCell(moveData.to.col, moveData.to.row);
+  const fromCell = getCell(moveData.from.column, moveData.from.row);
+  const toCell = getCell(moveData.to.column, moveData.to.row);
 
   if (fromCell && toCell) {
     move(fromCell, toCell);

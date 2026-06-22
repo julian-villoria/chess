@@ -11,9 +11,9 @@ export default {
   addConnectedPlayer(newConnected: ConnectedPlayer): void {
     connectedPlayers.push(newConnected);
   },
-  removeConnectedPlayer(connectedLeave: ConnectedPlayer): void {
+  removeConnectedPlayer(peerId: string): void {
     const index = connectedPlayers.findIndex(
-      (connected) => connected.peerId === connectedLeave.peerId,
+      (connected) => connected.peerId === peerId,
     );
 
     if (index > -1) connectedPlayers.splice(index, 1);

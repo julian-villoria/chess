@@ -35,8 +35,8 @@ export function useMultiplayer() {
   ) => {
     const payload = {
       color: myColor.value,
-      from: { col: fromCol, row: fromRow },
-      to: { col: toCol, row: toRow },
+      from: { column: fromCol, row: fromRow },
+      to: { column: toCol, row: toRow },
     };
 
     send(JSON.stringify(payload));
