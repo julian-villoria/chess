@@ -12,7 +12,7 @@ const game = computed(() => {
 
   const objectData = JSON.parse(data.value);
 
-  const restoredBoard = new Board();
+  const restoredBoard = new Board(objectData.board.cells);
 
   objectData.board.cells.forEach((rawCell: any) => {
     if (rawCell && rawCell.piece) {
@@ -28,8 +28,6 @@ const game = computed(() => {
       }
     }
   });
-
-  console.log(restoredBoard);
 
   return new Game(restoredBoard, objectData.turn);
 });
